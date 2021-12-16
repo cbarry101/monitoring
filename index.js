@@ -1,18 +1,19 @@
 const express = require('express')
 const path = require('path')
 
-const app =  express()
 
 const Rollbar = require('rollbar')
 const rollbar = new Rollbar({
-  accessToken: 'a3731a1ae5c746b291ec78142b286476',
-  captureUncaught: true,
-  captureUnhandledRejections: true,
+    accessToken: 'a3731a1ae5c746b291ec78142b286476',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
 })
 
 let students = []
 
-app.use(rollbar.errorHandler())
+const app =  express()
+app.use(express.json())
+
 
 app.get('/', (req,res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'))
@@ -28,7 +29,7 @@ app.post('/api/student', (req,res) => {
 
     res.status(200).send(students)
 })
-
+app.use(rollbar.errorHandler())
 const port = process.env.PORT || 4545
 
 app.listen(port, () => console.log(`Take us to warp ${port}`))
